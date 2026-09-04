@@ -21,6 +21,7 @@ input{width:100%;padding:10px 12px;border:1px solid #dde3ec;border-radius:4px;fo
 color:#112747;background:#fff;}
 input:focus{outline:none;border-color:#fbb03b;box-shadow:0 0 0 3px rgba(251,176,59,.16);}
 .hint{font-size:11.5px;color:#67717f;margin-top:6px;line-height:1.5;}
+.opt{color:#a3adbb;font-weight:500;letter-spacing:1.1px;}
 .preview{padding:30px 34px;overflow-x:auto;border-top:1px solid #eef1f5;}
 .btnrow{display:flex;gap:10px;align-items:center;padding:0 30px 24px;flex-wrap:wrap;}
 button{background:#112747;color:#fff;border:0;border-radius:4px;padding:11px 20px;
@@ -66,6 +67,16 @@ line-height:1.6;color:#5c4a1f;border-radius:0 4px 4px 0;margin-top:16px;}
         <label>Email</label>
         <input id="f_mail" value="firstname.lastname@yesagain.com" spellcheck="false">
         <div class="hint">Fills itself from your name — edit it if your address is different.</div>
+      </div>
+      <div>
+        <label>Second phone <span class="opt">— optional</span></label>
+        <input id="f_tel2" value="" placeholder="Office or second mobile" spellcheck="false">
+        <div class="hint">Leave it empty if you only have one number — the line simply disappears.</div>
+      </div>
+      <div>
+        <label>LinkedIn <span class="opt">— optional</span></label>
+        <input id="f_li" value="" placeholder="linkedin.com/in/your-profile" spellcheck="false">
+        <div class="hint">Only add it if your profile is current. Leave it empty and the link disappears.</div>
       </div>
     </div>
   </div>
@@ -139,6 +150,10 @@ line-height:1.6;color:#5c4a1f;border-radius:0 4px 4px 0;margin-top:16px;}
     appeared, close the app fully and reopen it. Apple Mail on iPhone doesn't sync, so use the
     <b>plain-text version</b> there: <b>Settings &rarr; Apps &rarr; Mail &rarr; Signature</b>.</p>
 
+    <h3>The two optional fields</h3>
+    <p><b>Second phone</b> and <b>LinkedIn</b> are optional. Leave either one empty and it simply
+    will not appear &mdash; no gap, no blank line, no "N/A". Only add a LinkedIn profile if it is
+    current and presentable; a neglected profile on a company signature reads worse than no link.</p>
     <h3>If something looks wrong</h3>
     <ul>
       <li><b>Everything went plain</b> &mdash; the "match my default font" box is ticked in Apple Mail,
@@ -169,6 +184,10 @@ function build(short){
   const role = esc(document.getElementById("f_role").value) || "Your Job Title";
   const tel  = esc(document.getElementById("f_tel").value);
   const mail = esc(document.getElementById("f_mail").value);
+  const tel2 = esc((document.getElementById("f_tel2").value||"").trim());
+  let liRaw = (document.getElementById("f_li").value||"").trim();
+  liRaw = liRaw.replace(/^https?:\/\//i,"").replace(/^www\./i,"").replace(/\/+$/,"");
+  const liUrl = liRaw ? "https://www." + liRaw : "";
   const T='<table role="presentation" cellpadding="0" cellspacing="0" border="0"';
   const S="Helvetica,Arial,sans-serif";
   const SR="'Instrument Serif',Georgia,'Times New Roman',serif";
@@ -176,6 +195,9 @@ function build(short){
   const A=(t,h,c,u)=>'<a href="'+h+'" style="color:'+c+';text-decoration:none;'+(u?'border-bottom:1px solid #fbb03b;':'')+'">'+t+'</a>';
   const WC=A("yesagain.com","https://www.yesagain.com","#112747",1);
   const WA=A("yesagain.ae","https://www.yesagain.ae","#112747",1);
+  const LI = liUrl ? ' &nbsp;&middot;&nbsp; ' + A("LinkedIn", liUrl, "#67717f", 0) : "";
+  const T2_STACK  = tel2 ? '<br>' + A(tel2, telHref(tel2), "#112747", 0) : "";
+  const T2_INLINE = tel2 ? ' &nbsp;&middot;&nbsp; ' + A(tel2, telHref(tel2), "#112747", 0) : "";
   const roleline = sz => '<div style="font-family:'+S+';font-size:'+sz+'px;font-weight:bold;letter-spacing:2.6px;'+
     'text-transform:uppercase;padding-top:8px;color:#67717f;">'+role+
     '<span style="color:#e4e8ee;"> &nbsp;|&nbsp; </span><span style="color:#112747;">YesAgain Group</span></div>';
@@ -200,8 +222,8 @@ function build(short){
         '<td valign="top" align="right" width="88" style="width:88px;">'+logo(88)+'</td></tr></table>'+
         '<div style="height:11px;font-size:1px;line-height:11px;">&nbsp;</div>'+
         '<div style="font-family:'+S+';font-size:12px;line-height:1.8;color:#112747;">'+
-          A(tel,telHref(tel),"#112747",0)+' &nbsp;&middot;&nbsp; '+A(mail,"mailto:"+mail,"#112747",0)+'<br>'+
-          WC+' &nbsp;&middot;&nbsp; '+WA+'</div>'+
+          A(tel,telHref(tel),"#112747",0)+T2_INLINE+' &nbsp;&middot;&nbsp; '+A(mail,"mailto:"+mail,"#112747",0)+'<br>'+
+          WC+' &nbsp;&middot;&nbsp; '+WA+LI+'</div>'+
         '<div style="font-family:'+S+';font-size:8.5px;font-weight:bold;letter-spacing:1.4px;color:#112747;padding-top:10px;line-height:1.5;">'+CERT+'</div>'+
       '</td></tr></table>';
   }
@@ -216,8 +238,8 @@ function build(short){
       '<td valign="top" align="right" width="112" style="width:112px;">'+logo(112)+'</td></tr></table>'+
       '<div style="height:16px;font-size:1px;line-height:16px;">&nbsp;</div>'+
       '<div style="font-family:'+S+';font-size:12.5px;line-height:1.95;color:#112747;">'+
-        A(tel,telHref(tel),"#112747",0)+'<br>'+A(mail,"mailto:"+mail,"#112747",0)+'<br>'+
-        WC+' &nbsp;&middot;&nbsp; '+WA+'</div>'+
+        A(tel,telHref(tel),"#112747",0)+T2_STACK+'<br>'+A(mail,"mailto:"+mail,"#112747",0)+'<br>'+
+        WC+' &nbsp;&middot;&nbsp; '+WA+LI+'</div>'+
       '<div style="height:15px;font-size:1px;line-height:15px;">&nbsp;</div>'+ tiles +
       '<div style="font-family:'+S+';font-size:9px;letter-spacing:1.1px;color:#8a6d1f;padding-top:9px;line-height:1.5;">Circular 100 Middle East Award 2026</div>'+
       '<div style="font-family:'+S+';font-size:9px;letter-spacing:1.1px;color:#67717f;padding-top:4px;line-height:1.5;">United Kingdom &nbsp;&middot;&nbsp; France &nbsp;&middot;&nbsp; UAE &nbsp;&middot;&nbsp; USA &nbsp;&middot;&nbsp; China</div>'+
@@ -249,8 +271,13 @@ function copyPlain(){
   const role = document.getElementById("f_role").value;
   const tel  = document.getElementById("f_tel").value;
   const mail = document.getElementById("f_mail").value;
-  const txt = name + "\n" + role + " | YesAgain Group\n" + tel + " | " + mail +
-    "\nyesagain.com | yesagain.ae\nR2v3 | ISO 9001 | ISO 14001 | ISO 45001\n" +
+  const tel2 = (document.getElementById("f_tel2").value||"").trim();
+  let li = (document.getElementById("f_li").value||"").trim();
+  li = li.replace(/^https?:\/\//i,"").replace(/^www\./i,"").replace(/\/+$/,"");
+  const txt = name + "\n" + role + " | YesAgain Group\n" +
+    tel + (tel2 ? " | " + tel2 : "") + " | " + mail +
+    "\nyesagain.com | yesagain.ae" + (li ? " | " + li : "") +
+    "\nR2v3 | ISO 9001 | ISO 14001 | ISO 45001\n" +
     "Circular 100 Middle East Award 2026\nUnited Kingdom | France | UAE | USA | China\n";
   const ta = document.createElement("textarea");
   ta.value = txt; document.body.appendChild(ta); ta.select();
@@ -262,9 +289,9 @@ function copyPlain(){
   setTimeout(()=>{ ok.classList.remove("show"); ok.textContent = "Copied"; }, 3500);
 }
 
-["f_name","f_role","f_tel","f_mail"].forEach(id =>
+["f_name","f_role","f_tel","f_mail","f_tel2","f_li"].forEach(id =>
   document.getElementById(id).addEventListener("input", render));
-["f_name","f_role","f_tel","f_mail"].forEach(id =>
+["f_name","f_role","f_tel","f_mail","f_tel2","f_li"].forEach(id =>
   document.getElementById(id).addEventListener("focus", e => e.target.select()));
 render();
 </script>
