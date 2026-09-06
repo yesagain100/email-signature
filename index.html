@@ -62,6 +62,8 @@ line-height:1.6;color:#5c4a1f;border-radius:0 4px 4px 0;margin-top:16px;}
       <div>
         <label>Mobile</label>
         <input id="f_tel" value="+971 50 000 0000" spellcheck="false">
+        <div class="hint" id="telhint">Include the country code, e.g. <b>+971 50 440 3225</b> &mdash;
+        without it the number will not dial from abroad.</div>
       </div>
       <div>
         <label>Email</label>
@@ -211,8 +213,15 @@ function build(short){
   });
   tiles += '</tr></table>';
 
+  // Explicit white ground. Without it, dark-mode mail apps flip the background to
+  // black and leave the navy text where it is — the signature becomes unreadable.
+  const OPEN = T+' width="600" cellpadding="0" bgcolor="#ffffff" style="width:600px;'+
+    'background-color:#ffffff;border-collapse:collapse;"><tr>'+
+    '<td bgcolor="#ffffff" style="background-color:#ffffff;padding:10px 12px;">';
+  const CLOSE = '</td></tr></table>';
+
   if (short) {
-    return T+' width="600" style="width:600px;border-collapse:collapse;"><tr>'+
+    return OPEN + T+' width="576" style="width:576px;border-collapse:collapse;"><tr>'+
       '<td width="4" bgcolor="#112747" style="width:4px;background:#112747;font-size:1px;line-height:1px;">&nbsp;</td>'+
       '<td width="18" style="width:18px;font-size:1px;line-height:1px;">&nbsp;</td>'+
       '<td valign="top" style="padding:1px 0;">'+
@@ -225,10 +234,10 @@ function build(short){
           A(tel,telHref(tel),"#112747",0)+T2_INLINE+' &nbsp;&middot;&nbsp; '+A(mail,"mailto:"+mail,"#112747",0)+'<br>'+
           WC+' &nbsp;&middot;&nbsp; '+WA+LI+'</div>'+
         '<div style="font-family:'+S+';font-size:8.5px;font-weight:bold;letter-spacing:1.4px;color:#112747;padding-top:10px;line-height:1.5;">'+CERT+'</div>'+
-      '</td></tr></table>';
+      '</td></tr></table>' + CLOSE;
   }
 
-  return T+' width="600" style="width:600px;border-collapse:collapse;"><tr>'+
+  return OPEN + T+' width="576" style="width:576px;border-collapse:collapse;"><tr>'+
     '<td width="5" bgcolor="#112747" style="width:5px;background:#112747;font-size:1px;line-height:1px;">&nbsp;</td>'+
     '<td width="22" style="width:22px;font-size:1px;line-height:1px;">&nbsp;</td>'+
     '<td valign="top" style="padding:2px 0;">'+
@@ -243,11 +252,27 @@ function build(short){
       '<div style="height:15px;font-size:1px;line-height:15px;">&nbsp;</div>'+ tiles +
       '<div style="font-family:'+S+';font-size:9px;letter-spacing:1.1px;color:#8a6d1f;padding-top:9px;line-height:1.5;">Circular 100 Middle East Award 2026</div>'+
       '<div style="font-family:'+S+';font-size:9px;letter-spacing:1.1px;color:#67717f;padding-top:4px;line-height:1.5;">United Kingdom &nbsp;&middot;&nbsp; France &nbsp;&middot;&nbsp; UAE &nbsp;&middot;&nbsp; USA &nbsp;&middot;&nbsp; China</div>'+
-    '</td></tr></table>';
+    '</td></tr></table>' + CLOSE;
 }
 
 let lastAutoMail = "firstname.lastname@yesagain.com";
+function checkTel(){
+  const v = (document.getElementById("f_tel").value||"").trim();
+  const h = document.getElementById("telhint");
+  if (v && !v.startsWith("+")) {
+    h.innerHTML = '<b style="color:#b3541e;">Add the country code</b> &mdash; start with '+
+      '<b>+971</b> (UAE), <b>+44</b> (UK) or <b>+33</b> (France), e.g. <b>+971 50 440 3225</b>. '+
+      'Without it, customers abroad cannot dial you.';
+    h.style.color = "#b3541e";
+  } else {
+    h.innerHTML = 'Include the country code, e.g. <b>+971 50 440 3225</b> &mdash; '+
+      'without it the number will not dial from abroad.';
+    h.style.color = "";
+  }
+}
+
 function render(){
+  checkTel();
   const mailBox = document.getElementById("f_mail");
   const auto = slugEmail(document.getElementById("f_name").value);
   if (mailBox.value === lastAutoMail) { mailBox.value = auto; }
