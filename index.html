@@ -171,7 +171,7 @@ line-height:1.6;color:#5c4a1f;border-radius:0 4px 4px 0;margin-top:16px;}
 </div>
 
 <script>
-const LOGO = "https://yesagain100.github.io/email-signature/yesagain-logo-sig.png";
+const LOGO_BASE = "https://yesagain100.github.io/email-signature/yesagain-logo-";
 const esc = s => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 const telHref = t => "tel:" + (t||"").replace(/[^\d+]/g,"");
 
@@ -205,9 +205,11 @@ function build(short){
     '<span style="color:#e4e8ee;"> &nbsp;|&nbsp; </span><span style="color:#112747;">YesAgain Group</span></div>';
   // width AND height as real attributes: some clients re-embed the image and ignore CSS,
   // so the file itself is served at 224px and the attributes pin it down twice over.
-  const logo = w => '<img src="'+LOGO+'" width="'+w+'" height="'+Math.round(w*53/224)+'" '+
-    'alt="YesAgain" style="display:block;border:0;outline:none;width:'+w+'px;height:'+
-    Math.round(w*53/224)+'px;max-width:'+w+'px;">';
+  // Apple Mail downloads the image on paste and re-embeds it at the FILE's natural size,
+  // ignoring width/height attributes entirely. So each size is served as its own file at
+  // exactly the pixel size it should display at — the file IS the size control.
+  const logo = w => '<img src="'+LOGO_BASE+w+'.png" width="'+w+'" height="'+Math.round(w*236/1000)+'" '+
+    'alt="YesAgain" style="display:block;border:0;outline:none;width:'+w+'px;height:auto;max-width:'+w+'px;">';
 
   let tiles = T+'><tr>';
   ["R2v3","ISO 9001","ISO 14001","ISO 45001"].forEach((c,i)=>{
