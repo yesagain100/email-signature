@@ -47,6 +47,17 @@ line-height:1.6;color:#5c4a1f;border-radius:0 4px 4px 0;margin-top:16px;}
 </header>
 <div class="wrap">
 
+<section class="card" style="border-left:4px solid #b3541e;">
+  <div class="hd" style="background:#fff6ef;color:#b3541e;">⚠ Apple Mail users — read this first</div>
+  <div class="bd doc">
+    <p style="font-size:15px;margin-top:0;"><b>Switch your Mac to Light Appearance before you paste.</b></p>
+    <p><b>System Settings → Appearance → Light.</b> If you paste the signature while your Mac is in
+    Dark Appearance, Mail saves all the text as <b>white</b>. It looks fine on your screen and is
+    completely invisible to everyone you email. This is a bug in Mail, not in the signature.</p>
+    <p>Set it up in Light, then switch back to Dark afterwards if you prefer — once it is saved
+    correctly it stays correct.</p>
+  </div>
+</section>
 <section class="card">
   <div class="hd"><span class="step">1</span> Your details</div>
   <div class="bd">
@@ -137,6 +148,9 @@ line-height:1.6;color:#5c4a1f;border-radius:0 4px 4px 0;margin-top:16px;}
     </ol>
 
     <h3>Apple Mail</h3>
+    <p style="background:#fff6ef;border-left:3px solid #b3541e;padding:12px 16px;margin:0 0 12px;">
+    <b>Switch your Mac to Light Appearance first</b> (System Settings → Appearance → Light).
+    Pasting in Dark Appearance makes Mail save your text as white — invisible to everyone else.</p>
     <ol>
       <li><b>Mail &rarr; Settings &rarr; Signatures</b>.</li>
       <li>Select your account on the left, click <b>+</b>, and rename it <b>YesAgain</b>.</li>
@@ -201,8 +215,8 @@ function build(short){
   const T2_STACK  = tel2 ? '<br>' + A(tel2, telHref(tel2), "#112747", 0) : "";
   const T2_INLINE = tel2 ? ' &nbsp;&middot;&nbsp; ' + A(tel2, telHref(tel2), "#112747", 0) : "";
   const roleline = sz => '<div style="font-family:'+S+';font-size:'+sz+'px;font-weight:bold;letter-spacing:2.6px;'+
-    'text-transform:uppercase;padding-top:8px;color:#67717f;background-color:#ffffff;">'+role+
-    '<span style="color:#e4e8ee;"> &nbsp;|&nbsp; </span><span style="color:#112747;">YesAgain Group</span></div>';
+    'text-transform:uppercase;padding-top:8px;color:#67717f !important;background-color:#ffffff !important;">'+role+
+    '<span style="color:#e4e8ee !important;"> &nbsp;|&nbsp; </span><span style="color:#112747 !important;">YesAgain Group</span></div>';
   // width AND height as real attributes: some clients re-embed the image and ignore CSS,
   // so the file itself is served at 224px and the attributes pin it down twice over.
   // Apple Mail downloads the image on paste and re-embeds it at the FILE's natural size,
@@ -215,15 +229,15 @@ function build(short){
   ["R2v3","ISO 9001","ISO 14001","ISO 45001"].forEach((c,i)=>{
     if(i) tiles += '<td width="6" style="width:6px;font-size:1px;line-height:1px;">&nbsp;</td>';
     tiles += '<td bgcolor="#f4f6f9" style="background:#f4f6f9;border:1px solid #e4e8ee;padding:6px 11px;'+
-      'font-family:'+S+';font-size:9.5px;font-weight:bold;letter-spacing:.5px;color:#112747;white-space:nowrap;">'+c+'</td>';
+      'font-family:'+S+';font-size:9.5px;font-weight:bold;letter-spacing:.5px;color:#112747 !important;white-space:nowrap;">'+c+'</td>';
   });
   tiles += '</tr></table>';
 
   // Explicit white ground. Without it, dark-mode mail apps flip the background to
   // black and leave the navy text where it is — the signature becomes unreadable.
   const OPEN = T+' width="600" cellpadding="0" bgcolor="#ffffff" style="width:600px;'+
-    'background-color:#ffffff;border-collapse:collapse;"><tr>'+
-    '<td bgcolor="#ffffff" style="background-color:#ffffff;padding:10px 12px;">';
+    'background-color:#ffffff !important;border-collapse:collapse;"><tr>'+
+    '<td bgcolor="#ffffff" style="background-color:#ffffff !important;padding:10px 12px;">';
   const CLOSE = '</td></tr></table>';
 
   if (short) {
@@ -232,14 +246,14 @@ function build(short){
       '<td width="18" style="width:18px;font-size:1px;line-height:1px;">&nbsp;</td>'+
       '<td valign="top" style="padding:1px 0;">'+
         T+' width="100%"><tr><td valign="top">'+
-        '<div style="font-family:'+SR+';font-size:21px;line-height:1.15;color:#112747;background-color:#ffffff;mso-line-height-rule:exactly;">'+name+'</div>'+
+        '<div style="font-family:'+SR+';font-size:21px;line-height:1.15;color:#112747 !important;background-color:#ffffff !important;mso-line-height-rule:exactly;">'+name+'</div>'+
         roleline(8.5)+'</td>'+
         '<td valign="top" align="right" width="88" style="width:88px;">'+logo(88)+'</td></tr></table>'+
         '<div style="height:11px;font-size:1px;line-height:11px;">&nbsp;</div>'+
-        '<div style="font-family:'+S+';font-size:12px;line-height:1.8;color:#112747;background-color:#ffffff;">'+
+        '<div style="font-family:'+S+';font-size:12px;line-height:1.8;color:#112747 !important;background-color:#ffffff !important;">'+
           A(tel,telHref(tel),"#112747",0)+T2_INLINE+' &nbsp;&middot;&nbsp; '+A(mail,"mailto:"+mail,"#112747",0)+'<br>'+
           WC+' &nbsp;&middot;&nbsp; '+WA+LI+'</div>'+
-        '<div style="font-family:'+S+';font-size:8.5px;font-weight:bold;letter-spacing:1.4px;color:#112747;background-color:#ffffff;padding-top:10px;line-height:1.5;">'+CERT+'</div>'+
+        '<div style="font-family:'+S+';font-size:8.5px;font-weight:bold;letter-spacing:1.4px;color:#112747 !important;background-color:#ffffff !important;padding-top:10px;line-height:1.5;">'+CERT+'</div>'+
       '</td></tr></table>' + CLOSE;
   }
 
@@ -248,16 +262,16 @@ function build(short){
     '<td width="22" style="width:22px;font-size:1px;line-height:1px;">&nbsp;</td>'+
     '<td valign="top" style="padding:2px 0;">'+
       T+' width="100%"><tr><td valign="top">'+
-      '<div style="font-family:'+SR+';font-size:28px;line-height:1.15;color:#112747;background-color:#ffffff;mso-line-height-rule:exactly;">'+name+'</div>'+
+      '<div style="font-family:'+SR+';font-size:28px;line-height:1.15;color:#112747 !important;background-color:#ffffff !important;mso-line-height-rule:exactly;">'+name+'</div>'+
       roleline(9)+'</td>'+
       '<td valign="top" align="right" width="112" style="width:112px;">'+logo(112)+'</td></tr></table>'+
       '<div style="height:16px;font-size:1px;line-height:16px;">&nbsp;</div>'+
-      '<div style="font-family:'+S+';font-size:12.5px;line-height:1.95;color:#112747;background-color:#ffffff;">'+
+      '<div style="font-family:'+S+';font-size:12.5px;line-height:1.95;color:#112747 !important;background-color:#ffffff !important;">'+
         A(tel,telHref(tel),"#112747",0)+T2_STACK+'<br>'+A(mail,"mailto:"+mail,"#112747",0)+'<br>'+
         WC+' &nbsp;&middot;&nbsp; '+WA+LI+'</div>'+
       '<div style="height:15px;font-size:1px;line-height:15px;">&nbsp;</div>'+ tiles +
-      '<div style="font-family:'+S+';font-size:9px;letter-spacing:1.1px;color:#8a6d1f;background-color:#ffffff;padding-top:9px;line-height:1.5;">Circular 100 Middle East Award 2026</div>'+
-      '<div style="font-family:'+S+';font-size:9px;letter-spacing:1.1px;color:#67717f;background-color:#ffffff;padding-top:4px;line-height:1.5;">United Kingdom &nbsp;&middot;&nbsp; France &nbsp;&middot;&nbsp; UAE &nbsp;&middot;&nbsp; USA &nbsp;&middot;&nbsp; China</div>'+
+      '<div style="font-family:'+S+';font-size:9px;letter-spacing:1.1px;color:#8a6d1f !important;background-color:#ffffff !important;padding-top:9px;line-height:1.5;">Circular 100 Middle East Award 2026</div>'+
+      '<div style="font-family:'+S+';font-size:9px;letter-spacing:1.1px;color:#67717f !important;background-color:#ffffff !important;padding-top:4px;line-height:1.5;">United Kingdom &nbsp;&middot;&nbsp; France &nbsp;&middot;&nbsp; UAE &nbsp;&middot;&nbsp; USA &nbsp;&middot;&nbsp; China</div>'+
     '</td></tr></table>' + CLOSE;
 }
 
